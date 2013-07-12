@@ -1,11 +1,15 @@
 require 'mechanize'
 
-agent = Mechanize.new
-page = agent.get('http://www.google.ru')
-google_form = page.form('f')
-google_form.q = 'mechanize'
-page = agent.submit(google_form, google_form.buttons.first)
+agent = Mechanize.new { |agent|
+  agent.user_agent_alias = 'Mac Safari'
+}
 
-page.links.each do |l|
-  puts link.text
+agent.get('http://google.com/') do |page|
+  search_result = page.form_with(:name => 'f') do |search|
+    search.q = 'Hello world'
+  end.submit
+
+  search_result.links.each do |link|
+    puts link.text
+  end
 end
